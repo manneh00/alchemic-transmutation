@@ -9,7 +9,7 @@ export interface CardProps {
   polarity: PolarityType;
   trait: TraitType;
   expression: string;
-  dispatch: React.Dispatch<ActionType>;
+  dispatch: React.Dispatch<QuizReducerActionType>;
 }
 
 export type SymbolType = {
@@ -58,19 +58,39 @@ export type AnswerType = {
   trait: TraitType;
   element: ElementType;
   expression: string;
-  polarity: "healthy" | "toxic";
+  polarity: PolarityType;
 };
 
-export type QuizStateType = {
+export type QuizState = {
   currentIndex: number;
   answers: AnswerType[];
-  questions: {
-    trait: TraitType;
-    element: ElementType;
-  }[];
 };
 
-export type ActionType =
+export interface ResultType {
+  fire: ElementResultType;
+  earth: ElementResultType;
+  water: ElementResultType;
+  air: ElementResultType;
+}
+
+export interface ElementResultType {
+  blocked: number;
+  expressions: number;
+}
+
+export type QuizReducerActionType =
   | { type: "ANSWER_AND_NEXT"; payload: AnswerType }
   | { type: "PREVIOUS_QUESTION" }
+  | { type: "PROCESS_RESULTS"; payload: AnswerType }
+  | { type: "RESET" };
+
+export type ResultReducerActionType =
+  | {
+      type: "PROCESS_RESULTS";
+      payload: {
+        traitElement: ElementType;
+        polarity: PolarityType;
+        expressionElement: ElementType;
+      };
+    }
   | { type: "RESET" };

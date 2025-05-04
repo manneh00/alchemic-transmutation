@@ -1,26 +1,22 @@
-import { QuizStateType, ActionType } from "@/types";
-import { elementalQuestions } from "@/data";
+import { QuizState, QuizReducerActionType } from "@/types";
 
-export const initialState: QuizStateType = {
+export const initialState: QuizState = {
   currentIndex: 0,
   answers: [],
-  questions: elementalQuestions.map(({ trait, element }) => ({
-    trait,
-    element,
-  })),
 };
 
 export function quizReducer(
-  state: QuizStateType,
-  action: ActionType
-): QuizStateType {
+  state: QuizState,
+  action: QuizReducerActionType
+): QuizState {
   switch (action.type) {
     case "ANSWER_AND_NEXT":
-      const updated = [...state.answers];
-      updated[state.currentIndex] = action.payload;
+      const updatedAnswers = [...state.answers];
+
+      updatedAnswers[state.currentIndex] = action.payload;
       return {
         ...state,
-        answers: updated,
+        answers: updatedAnswers,
         currentIndex: state.currentIndex + 1,
       };
 
@@ -31,11 +27,7 @@ export function quizReducer(
       };
 
     case "RESET":
-      return {
-        currentIndex: 0,
-        answers: [],
-        questions: state.questions,
-      };
+      return initialState;
 
     default:
       return state;

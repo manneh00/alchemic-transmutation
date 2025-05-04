@@ -1,5 +1,3 @@
-import { WaterSymbol } from "../components/ElementSymbols";
-
 // components/Tetragrammaton.tsx
 export default function Tetragrammaton({ className = "" }) {
   return (

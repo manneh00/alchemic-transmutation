@@ -1,30 +1,41 @@
 "use client";
 import Card from "@/components/Card";
 import Tetragrammaton from "./Tetragrammaton";
-import { elementalQuestions, traitExpressions } from "@/data";
+import { elementalQuestions, traitExpressions } from "@/data"; //DO NOT TRANSFORM DATA
 import type { ElementType, PolarityType } from "@/types";
 import { useReducer, useState, useEffect } from "react";
 import Question from "@/components/Question";
 import { Switch } from "@/components/ui/switch";
 import { quizReducer, initialState } from "@/state/quizReducer";
+import { resultsReducer, resultsInitialState } from "@/state/resultsReducer";
 
 export default function Home() {
-  //const [currQuestion, setCurrQuestion] = useState(elementalQuestions[1]);
   const [healthy, setHealthy] = useState<PolarityType>("healthy");
-
   const [quizState, quizDispatch] = useReducer(quizReducer, initialState);
-  // const healthy =
-  //   quizState.answers.length > 0
-  //     ? quizState.answers[quizState.currentIndex].polarity
-  //     : "healthy";
   const currQuestion = elementalQuestions[quizState.currentIndex];
+  const [resultsState, resultsDispatch] = useReducer(
+    resultsReducer,
+    resultsInitialState
+  );
+  const [showResults, setShowResults] = useState(false);
 
   useEffect(() => {
-    if (quizState.answers.length)
-      setHealthy(quizState.answers[quizState.currentIndex - 1].polarity);
+    if (quizState.answers.length) {
+      const prevQuestionIndex = quizState.currentIndex - 1;
+      setHealthy(quizState.answers[prevQuestionIndex].polarity);
+      resultsDispatch({
+        type: "PROCESS_RESULTS",
+        payload: {
+          traitElement: elementalQuestions[prevQuestionIndex].element,
+          expressionElement: quizState.answers[prevQuestionIndex].element,
+          polarity: quizState.answers[prevQuestionIndex].polarity,
+        },
+      });
+    }
+    if (quizState.answers.length === elementalQuestions.length)
+      setShowResults(true);
   }, [quizState]);
 
-  console.log(quizState);
   return (
     <div className="grid  items-center justify-items-center border-golden border-2 p-2 min-h-screen gap-16 font-[family-name:var(--font-serif)]">
       <main className="w-full h-full flex flex-col gap-[32px] border-golden border rounded items-center sm:items-start">
@@ -32,34 +43,42 @@ export default function Home() {
         <div className="z-10 p-4">
           <Tetragrammaton />
 
-          <Question {...currQuestion} />
-          <div className="flex flex-row gap-4 content-center items-center">
-            <Switch
-              checked={healthy === "healthy" ? true : false}
-              onCheckedChange={() =>
-                setHealthy((prev) => (prev === "healthy" ? "toxic" : "healthy"))
-              }
-            />
-            <span>{healthy}</span>
-          </div>
+          {currQuestion && (
+            <>
+              <Question {...currQuestion} />
+              <div className="flex flex-row gap-4 content-center items-center">
+                <Switch
+                  checked={healthy === "healthy" ? true : false}
+                  onCheckedChange={() =>
+                    setHealthy((prev) =>
+                      prev === "healthy" ? "toxic" : "healthy"
+                    )
+                  }
+                />
+                <span>{healthy}</span>
+              </div>
+            </>
+          )}
 
           <div className="flex flex-col gap-10">
-            {Object.keys(traitExpressions[currQuestion.trait][healthy]).map(
-              (element) => (
-                <Card
-                  key={element}
-                  element={element as ElementType}
-                  expression={
-                    traitExpressions[currQuestion.trait][healthy][
-                      element as ElementType
-                    ].expression
-                  }
-                  trait={currQuestion.trait}
-                  polarity={healthy}
-                  dispatch={quizDispatch}
-                />
-              )
-            )}
+            {currQuestion &&
+              Object.keys(traitExpressions[currQuestion.trait][healthy]).map(
+                (element) => (
+                  <Card
+                    key={element}
+                    element={element as ElementType}
+                    expression={
+                      traitExpressions[currQuestion.trait][healthy][
+                        element as ElementType
+                      ].expression
+                    }
+                    trait={currQuestion.trait}
+                    polarity={healthy}
+                    dispatch={quizDispatch}
+                  />
+                )
+              )}
+            {showResults && <div>{}</div>}
           </div>
         </div>
       </main>
