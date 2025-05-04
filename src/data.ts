@@ -1,24 +1,4 @@
-export type Element = "fire" | "water" | "air" | "earth";
-
-export type TraitType =
-  | "drive"
-  | "libido"
-  | "ambition"
-  | "emotions"
-  | "adaptability"
-  | "intuition"
-  | "thoughts"
-  | "communication"
-  | "curiosity"
-  | "stability"
-  | "patience"
-  | "action";
-
-export type ElementalQuestion = {
-  trait: TraitType;
-  question: string;
-  element: Element;
-};
+import type { ElementalQuestion, TraitExpressions } from "@/types";
 
 export const elementalQuestions: ElementalQuestion[] = [
   {
@@ -94,21 +74,6 @@ export const elementalQuestions: ElementalQuestion[] = [
       "Did I execute practical actions steadily (Healthy), or procrastinate and resist tangible work (Toxic)?",
   },
 ];
-
-type TraitExpression = {
-  trait: TraitType;
-  expression: string;
-};
-
-export type ExpressionQuality = "healthy" | "toxic";
-
-type TraitExpressions = {
-  [T in TraitType]: {
-    [Q in ExpressionQuality]: {
-      [E in Element]: TraitExpression;
-    };
-  };
-};
 
 export const traitExpressions: TraitExpressions = {
   libido: {

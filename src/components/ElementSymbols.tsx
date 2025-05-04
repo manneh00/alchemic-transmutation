@@ -1,7 +1,5 @@
-type SymbolType = {
-  stroke: Element;
-  className: string;
-};
+import type { SymbolType } from "@/types";
+
 // components/FireSymbol.tsx
 export function FireSymbol({ stroke, className = "" }: SymbolType) {
   return (
