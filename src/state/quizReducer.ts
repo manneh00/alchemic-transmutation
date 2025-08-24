@@ -10,13 +10,18 @@ export function quizReducer(
   action: QuizReducerActionType
 ): QuizState {
   switch (action.type) {
-    case "ANSWER_AND_NEXT":
+    case "ANSWER_QUESTION":
       const updatedAnswers = [...state.answers];
 
       updatedAnswers[state.currentIndex] = action.payload;
       return {
         ...state,
         answers: updatedAnswers,
+      };
+
+    case "NEXT_QUESTION":
+      return {
+        ...state,
         currentIndex: state.currentIndex + 1,
       };
 

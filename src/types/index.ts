@@ -10,6 +10,7 @@ export interface CardProps {
   trait: TraitType;
   expression: string;
   dispatch: React.Dispatch<QuizReducerActionType>;
+  filter: boolean;
 }
 
 export type SymbolType = {
@@ -79,7 +80,8 @@ export interface ElementResultType {
 }
 
 export type QuizReducerActionType =
-  | { type: "ANSWER_AND_NEXT"; payload: AnswerType }
+  | { type: "ANSWER_QUESTION"; payload: AnswerType }
+  | { type: "NEXT_QUESTION" }
   | { type: "PREVIOUS_QUESTION" }
   | { type: "PROCESS_RESULTS"; payload: AnswerType }
   | { type: "RESET" };
